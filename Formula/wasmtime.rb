@@ -26,6 +26,11 @@ class Wasmtime < Formula
 
   def install
     system "cargo", "install", *std_cargo_args
+    system "cargo", "rustc", "--release", "-p", "wasmtime-c-api"
+    system "cp", "crates/c-api/wasm-c-api/include/wasm.h", "crates/c-api/include/"
+    lib.install shared_library("target/release/libwasmtime")
+    include.install "crates/c-api/wasm-c-api/include/wasm.h"
+    include.install Dir["crates/c-api/include/*"]
   end
 
   test do
